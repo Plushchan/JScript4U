@@ -1,0 +1,1 @@
+# JScript4U (JavaScript for you :>)
