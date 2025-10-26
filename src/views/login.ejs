@@ -1,0 +1,50 @@
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1>Login</h1>
+        </div>
+        <div class="card-body">
+            <form action="/auth/login" method="POST" id="login-form">
+                <label>E-mail</label>
+                <input type="text" name="email" class="form-control" id="email"><br>
+                <label>Password</label>
+                <input type="password" name="password" class="form-control" id="password"><br>
+                <button type="submit" class="btn btn-secondary">Register</button>
+                <div class="alert alert-danger">
+                    <pre id="errors"></pre>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById('login-form');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const errors = document.getElementById('errors');
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        errors.textContent = '';
+
+        fetch('/auth/login', {
+            method : 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email.value,
+                password: password.value,
+            }),
+        })
+        .then(res => res.json())
+        .then((r) => {
+            errors.textContent += r.message;
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    })
+</script>

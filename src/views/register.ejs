@@ -1,11 +1,59 @@
 <div class="container">
-    <h1>Register</h1>
-    <hr>
-    <form action="/auth/register" method="POST">
-        <label>E-mail</label>
-        <input type="text" class="form-control"><br>
-        <label>Password</label>
-        <input type="password" class="form-control"><br>
-        <button type="submit" class="btn btn-secondary">Register</button>
-    </form>
+    <div class="card">
+        <div class="card-header">
+            <h1>Register</h1>
+        </div>
+        <div class="card-body">
+            <form action="/auth/register" method="POST" id="register-form">
+                <label>Username</label>
+                <input type="text" name="username" class="form-control" id="username"><br>
+                <label>E-mail</label>
+                <input type="text" name="email" class="form-control" id="email"><br>
+                <label>Password</label>
+                <input type="password" name="password" class="form-control" id="password"><br>
+                <button type="submit" class="btn btn-secondary">Register</button>
+
+                <div class="alert alert-danger" role="alert">
+                    <pre id="errors"></pre>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+
+<script>
+    const form = document.getElementById('register-form');
+    const username = document.getElementById('username');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const errors = document.getElementById('errors');
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        errors.textContent = '';
+
+        fetch('/auth/register', {
+            method : 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: username.value,
+                email: email.value,
+                password: password.value,
+            }),
+        })
+        .then(res => res.json())
+        .then((r) => {
+            if(!r.success) {
+                r.message.forEach(e => {
+                    errors.textContent += e.msg + "\n"
+                });
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    })
+</script>
